@@ -1,3 +1,5 @@
+// Has a form to register the events.
+
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { addEvent } from "../store/eventSlice";
