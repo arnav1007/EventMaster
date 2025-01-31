@@ -1,3 +1,5 @@
+// This page shows the events(saved by default + added by user). It has a Tab thathas 2 buttons to switch the page views and a date filter option.
+
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { Box, Button, Paper, Stack, Container, Grid, Modal, TextField, Typography } from "@mui/material";
