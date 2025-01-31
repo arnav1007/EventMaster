@@ -1,4 +1,8 @@
+// Slice for saving event deatils and functionalities
+
 import { createSlice } from "@reduxjs/toolkit";
+
+// Sample data for viewing some events.
 
 const initialState = [
   {
@@ -61,6 +65,7 @@ const eventSlice = createSlice({
   name: "events",
   initialState,
   reducers: {
+// adding, reoving and editing functionality.
     addEvent: (state, action) => {
       const newEvent = {
         id: state.length + 1,
