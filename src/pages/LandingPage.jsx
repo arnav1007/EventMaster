@@ -1,3 +1,5 @@
+// This is the homepage where user First Lands. It shows basic features of the App as well as has 2 buttons to explore and register events.
+
 import { Box, Typography, Grid, Card, CardContent, Container, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -12,7 +14,7 @@ const LandingPage = () => {
   return (
     <Box sx={{ bgcolor: "#f9f9f9", py: 6 }}>
       <Container maxWidth="lg">
-        {/* Intro Section */}
+        
         <Box textAlign="center" sx={{ mb: 5, px: { xs: 2, md: 0 } }}>
           <Typography variant="h4" fontWeight="bold" sx={{ color: "#144987", fontSize: { xs: "1.8rem", md: "2.5rem" } }}>
             Welcome to EventMaster
@@ -22,7 +24,7 @@ const LandingPage = () => {
           </Typography>
         </Box>
 
-        {/* Features Section */}
+        {/* Features Section- Cards showing description */}
         <Grid container spacing={3} justifyContent="center">
           {featuresData.map((feature, index) => (
             <Grid item xs={12} sm={6} md={3} key={index}>
@@ -40,7 +42,7 @@ const LandingPage = () => {
           ))}
         </Grid>
 
-        {/* Call-to-Action Buttons */}
+        {/* Explore and Register Events Buttons */}
         <Box textAlign="center" sx={{ mt: 6, display: "flex", justifyContent: "center", gap: 2, flexWrap: "wrap" }}>
           <Button variant="contained" component={Link} to="/register" sx={{ px: { xs: 3, md: 5 }, py: { xs: 1, md: 1.5 } }}>
             Register an Event
