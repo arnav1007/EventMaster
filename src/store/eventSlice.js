@@ -57,8 +57,6 @@ const initialState = [
   },
 ];
 
-
-
 const eventSlice = createSlice({
   name: "events",
   initialState,
@@ -70,7 +68,8 @@ const eventSlice = createSlice({
         venue: action.payload.venue || "Unknown Venue",
         date: action.payload.date || "No Date",
         time: action.payload.time || "No Time",
-        image: action.payload.image || "https://via.placeholder.com/300",
+        organizer: action.payload.organizer || "Anonymous",
+        contact: action.payload.contact || "No Contact",
       };
       state.push(newEvent);
     },
