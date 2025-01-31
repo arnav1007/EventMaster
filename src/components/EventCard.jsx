@@ -27,7 +27,6 @@ const EventCard = ({ event, onEdit }) => {
           background: "linear-gradient(135deg, #e3f2fd, #ffffff)",
           boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
           transition: "0.3s",
-          "&:hover": { transform: "scale(1.05)" },
         }}
       >
         <CardContent>

@@ -79,7 +79,7 @@ const eventSlice = createSlice({
     editEvent: (state, action) => {
       const index = state.findIndex(event => event.id === action.payload.id);
       if (index !== -1) {
-        state[index] = action.payload;
+        state[index] = { ...state[index], ...action.payload }; // Merge updated fields
       }
     },
   },

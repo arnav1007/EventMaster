@@ -1,20 +1,41 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { Box, Button, Grid, Typography, Paper } from "@mui/material";
+import { Box, Button, Paper, Stack, Container, Grid, Modal, TextField, Typography } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import EventCard from "../components/EventCard";
 import EventTable from "../components/EventTable";
+import { editEvent } from "../store/eventSlice";
+import { toast } from "react-toastify";
 
 const EventsListingPage = () => {
   const events = useSelector((state) => state.events);
+  const dispatch = useDispatch();
   const [view, setView] = useState("card");
   const [selectedDate, setSelectedDate] = useState(null);
+  const [editEventData, setEditEventData] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const filteredEvents = selectedDate
     ? events.filter((event) => dayjs(event.date).isSame(selectedDate, "day"))
     : events;
+
+  const handleEdit = (event) => {
+    setEditEventData(event);
+    setOpen(true); // Open the modal
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setEditEventData(null);
+  };
+
+  const handleSaveEdit = () => {
+    dispatch(editEvent(editEventData));
+    toast.success("Event Updated Successfully ✅");
+    handleClose();
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -37,35 +58,107 @@ const EventsListingPage = () => {
             textAlign: "center",
           }}
         >
-          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "center" }}>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems="center">
             <Button variant={view === "card" ? "contained" : "outlined"} onClick={() => setView("card")}>
               Card View
             </Button>
             <Button variant={view === "table" ? "contained" : "outlined"} onClick={() => setView("table")}>
               Table View
             </Button>
-          </Box>
+          </Stack>
 
-          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "center" }}>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems="center">
             <DatePicker label="Filter by Date" value={selectedDate} onChange={(date) => setSelectedDate(date)} sx={{ width: 200 }} />
             <Button variant="contained" color={selectedDate ? "secondary" : "primary"} onClick={() => setSelectedDate(null)}>
               {selectedDate ? "Remove Filters" : "Apply Filters"}
             </Button>
-          </Box>
+          </Stack>
         </Paper>
 
         {/* Display Events */}
         {view === "card" ? (
-          <Grid container spacing={3} justifyContent="center">
-            {filteredEvents.map((event) => (
-              <Grid item xs={12} sm={6} md={4} key={event.id}>
-                <EventCard event={event} />
-              </Grid>
-            ))}
-          </Grid>
+          <Container maxWidth="lg">
+            <Grid container spacing={3} justifyContent="center">
+              {filteredEvents.map((event) => (
+                <Grid item xs={12} sm={6} md={4} key={event.id}>
+                  <EventCard event={event} onEdit={handleEdit} />
+                </Grid>
+              ))}
+            </Grid>
+          </Container>
         ) : (
-          <EventTable events={filteredEvents} />
+          <EventTable events={filteredEvents} onEdit={handleEdit} />
         )}
+
+        {/* Edit Event Modal */}
+        <Modal open={open} onClose={handleClose}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "white",
+              p: 3,
+              boxShadow: 24,
+              borderRadius: "10px",
+            }}
+          >
+            <Typography variant="h6" textAlign="center" sx={{ mb: 2 }}>
+              Edit Event
+            </Typography>
+            <TextField
+              label="Event Name"
+              fullWidth
+              sx={{ mb: 2 }}
+              value={editEventData?.name || ""}
+              onChange={(e) => setEditEventData({ ...editEventData, name: e.target.value })}
+            />
+            <TextField
+              label="Venue"
+              fullWidth
+              sx={{ mb: 2 }}
+              value={editEventData?.venue || ""}
+              onChange={(e) => setEditEventData({ ...editEventData, venue: e.target.value })}
+            />
+            <DatePicker
+              label="Date"
+              value={editEventData?.date ? dayjs(editEventData.date) : null}
+              onChange={(date) => setEditEventData({ ...editEventData, date: date.format("YYYY-MM-DD") })}
+              sx={{ mb: 2, width: "100%" }}
+            />
+            <TextField
+              label="Time"
+              fullWidth
+              sx={{ mb: 2 }}
+              value={editEventData?.time || ""}
+              onChange={(e) => setEditEventData({ ...editEventData, time: e.target.value })}
+            />
+            <TextField
+              label="Organized By"
+              fullWidth
+              sx={{ mb: 2 }}
+              value={editEventData?.organizer || ""}
+              onChange={(e) => setEditEventData({ ...editEventData, organizer: e.target.value })}
+            />
+            <TextField
+              label="Contact"
+              fullWidth
+              sx={{ mb: 2 }}
+              value={editEventData?.contact || ""}
+              onChange={(e) => setEditEventData({ ...editEventData, contact: e.target.value })}
+            />
+            <Stack direction="row" justifyContent="space-between" mt={2}>
+              <Button variant="contained" color="success" onClick={handleSaveEdit}>
+                Save Changes
+              </Button>
+              <Button variant="outlined" color="error" onClick={handleClose}>
+                Cancel
+              </Button>
+            </Stack>
+          </Box>
+        </Modal>
       </Box>
     </LocalizationProvider>
   );
